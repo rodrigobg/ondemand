@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ondemand Streaming de Vídeos Grátis</title>
+    <title>Ondemand Vídeo Player Streaming</title>
     <style>
         html, body {
             height: 100%;
@@ -11,77 +11,71 @@
             padding: 0;
             overflow: hidden;
         }
-        
         #player-container {
             width: 100%;
             height: 100vh;
-            position: relative;
         }
-        
-        #script-container {
-            width: 100%;
-            height: 100%;
-        }
-        
-        /* Estilo para o iframe que será gerado */
-        #script-container iframe {
+        #player-container iframe {
             width: 100%;
             height: 100%;
             border: none;
-            display: block;
         }
     </style>
 </head>
 <body>
+    <div id="player-container"></div>
+    
+    <script>
+        // Valores padrão
+        const defaults = {
+            vod: "F5B580D43F9011EC97A574D02B29C423",
+            id: "",
+            det: "1",
+            width: "100%",
+            height: "100%"
+        };
 
-<div id="player-container">
-    <div id="script-container"></div>
-</div>
+        // Função para obter parâmetros da URL
+        function getQueryParams() {
+            const params = {};
+            const queryString = window.location.search.substring(1);
+            const pairs = queryString.split('&');
+            
+            pairs.forEach(pair => {
+                const [key, value] = pair.split('=');
+                if (key) {
+                    params[key] = value ? decodeURIComponent(value) : '';
+                }
+            });
+            
+            return params;
+        }
 
-<script>
-  // Valores padrão
-  const defaults = {
-    vod: "707728A82AC14E388D615AAB9A847D0C",
-    id: "80424",
-    det: "1",
-    width: "100%",
-    height: "100%"
-  };
+        // Obtém parâmetros da URL
+        const urlParams = getQueryParams();
 
-  // Função para pegar query params
-  function getQueryParams() {
-    const params = {};
-    const query = window.location.search.substring(1);
-    query.split("&").forEach(part => {
-      const [key, value] = part.split("=");
-      if (key && value) params[key] = decodeURIComponent(value);
-    });
-    return params;
-  }
+        // Cria o elemento script dinamicamente
+        const script = document.createElement('script');
+        script.src = 'https://app.multisocial.com.br/unitv/ondemand.js';
+        
+        // Define os atributos com valores da URL ou padrões
+        script.setAttribute('data-vod', urlParams.vod || defaults.vod);
+        script.setAttribute('data-id', urlParams.id || defaults.id);
+        script.setAttribute('data-det', urlParams.det || defaults.det);
+        script.setAttribute('data-width', urlParams.width || defaults.width);
+        script.setAttribute('data-height', urlParams.height || defaults.height);
 
-  const params = getQueryParams();
+        // Adiciona o script à página
+        document.getElementById('player-container').appendChild(script);
 
-  // Cria o script com dados dinâmicos ou padrão
-  const script = document.createElement("script");
-  script.src = "https://app.multisocial.com.br/unitv/ondemand.js";
-  script.setAttribute("data-vod", params.vod || defaults.vod);
-  script.setAttribute("data-id", params.id || defaults.id);
-  script.setAttribute("data-det", params.det || defaults.det);
-  script.setAttribute("data-width", params.width || defaults.width);
-  script.setAttribute("data-height", params.height || defaults.height);
-
-  // Adiciona ao DOM
-  document.getElementById("script-container").appendChild(script);
-
-  // Garante que o iframe mantenha 100% após carregamento
-  script.onload = function() {
-      const iframe = document.querySelector('#script-container iframe');
-      if(iframe) {
-          iframe.style.height = '100%';
-          iframe.style.width = '100%';
-      }
-  };
-</script>
-
+        // Garante que o iframe mantenha 100% após carregamento
+        script.onload = function() {
+            const iframe = document.querySelector('#player-container iframe');
+            if(iframe) {
+                iframe.style.height = '100%';
+                iframe.style.width = '100%';
+            }
+        };
+    </script>
 </body>
 </html>
