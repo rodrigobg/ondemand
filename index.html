@@ -5,13 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ondemand Streaming de Vídeos Grátis</title>
     <style>
-        body { margin: 0; padding: 0; overflow: hidden; }
-        #player-container { width: 100%; height: 100vh; }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        #player-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+        
+        #script-container {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Estilo para o iframe que será gerado */
+        #script-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
     </style>
 </head>
 <body>
 
-<div id="script-container"></div>
+<div id="player-container">
+    <div id="script-container"></div>
+</div>
 
 <script>
   // Valores padrão
@@ -47,6 +72,15 @@
 
   // Adiciona ao DOM
   document.getElementById("script-container").appendChild(script);
+
+  // Garante que o iframe mantenha 100% após carregamento
+  script.onload = function() {
+      const iframe = document.querySelector('#script-container iframe');
+      if(iframe) {
+          iframe.style.height = '100%';
+          iframe.style.width = '100%';
+      }
+  };
 </script>
 
 </body>
